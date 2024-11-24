@@ -1,6 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Contacto = () => {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    apellidos: '',
+    correo: '',
+    telefono: '',
+    mensaje: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/api/menu/contacto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        alert('Mensaje enviado exitosamente');
+        setFormData({
+          nombre: '',
+          apellidos: '',
+          correo: '',
+          telefono: '',
+          mensaje: ''
+        });
+      } else {
+        alert('Error al enviar el mensaje');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al enviar el mensaje');
+    }
+  };
+
   return (
     <div className="formulario-contacto contenedor" id="contacto">
       <div className="informacion-contacto">
@@ -14,26 +58,26 @@ const Contacto = () => {
           <i className="fa-brands fa-twitter"></i>
         </div>
       </div>
-      <form className="formulario">
+      <form className="formulario" onSubmit={handleSubmit}>
         <div className="input-formulario">
           <label htmlFor="nombre">Nombre</label>
-          <input type="text" placeholder="Lucia" id="nombre" />
+          <input type="text" placeholder="Lucia" id="nombre" value={formData.nombre} onChange={handleChange} />
         </div>
         <div className="input-formulario">
           <label htmlFor="apellidos">Apellidos</label>
-          <input type="text" placeholder="Gonzales" id="apellidos" />
+          <input type="text" placeholder="Gonzales" id="apellidos" value={formData.apellidos} onChange={handleChange} />
         </div>
         <div className="input-formulario">
           <label htmlFor="correo">Correo</label>
-          <input type="email" placeholder="Example@example.com" id="correo" />
+          <input type="email" placeholder="Example@example.com" id="correo" value={formData.correo} onChange={handleChange} />
         </div>
         <div className="input-formulario">
           <label htmlFor="telefono">Telefono</label>
-          <input type="tel" placeholder="+57 987 543 1234" id="telefono" />
+          <input type="tel" placeholder="+57 987 543 1234" id="telefono" value={formData.telefono} onChange={handleChange} />
         </div>
         <div className="input-formulario">
           <label htmlFor="mensaje">Mensaje</label>
-          <textarea id="mensaje"></textarea>
+          <textarea id="mensaje" value={formData.mensaje} onChange={handleChange}></textarea>
         </div>
         <div className="btn-formulario">
           <input type="submit" className="btn btn-verde" value="Enviar" />
@@ -44,3 +88,4 @@ const Contacto = () => {
 };
 
 export default Contacto;
+

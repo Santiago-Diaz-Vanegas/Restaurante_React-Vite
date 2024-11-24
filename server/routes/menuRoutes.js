@@ -23,8 +23,20 @@ router.get('/getMenuItems', (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      
       res.json(results);
+    }
+  });
+});
+
+router.post('/contacto', (req, res) => {
+  const { nombre, apellidos, correo, telefono, mensaje } = req.body;
+  const query = 'INSERT INTO contactos (nombre, apellidos, correo, telefono, mensaje) VALUES (?, ?, ?, ?, ?)';
+
+  connection.query(query, [nombre, apellidos, correo, telefono, mensaje], (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(201).send('Contacto registrado exitosamente');
     }
   });
 });
